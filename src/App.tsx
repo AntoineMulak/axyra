@@ -1484,9 +1484,9 @@ export default function AxyraWebsite() {
       <Route path="/*" element={<AxyraMain />} />
     </Routes>
   );
-  }
+}
 
-  function AxyraMain() {
+function AxyraMain() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
