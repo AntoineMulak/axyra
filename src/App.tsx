@@ -1529,7 +1529,7 @@ export default function AxyraWebsite() {
                   {label}
                 </button>
               ))}
-              <button onClick={() => setBlogOpen({open: true, idx: null})} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: 14, cursor: "pointer", padding: 0, transition: "color 0.2s" }}
+              <button onClick={() => window.location.href = "/blog"} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: 14, cursor: "pointer", padding: 0, transition: "color 0.2s" }}
                 onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
                 onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}>
                 Blog
