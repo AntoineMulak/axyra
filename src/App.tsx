@@ -1928,7 +1928,7 @@ function AxyraMain() {
 
           <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
             {ARTICLES.map((article, idx) => (
-              <div key={article.title} onClick={() => window.location.href = `/blog/${article.slug}`} style={{ background: `rgba(127,119,221,0.05)`, border: `0.5px solid rgba(127,119,221,0.15)`, borderRadius: 16, overflow: "hidden", cursor: "pointer", transition: "border-color 0.2s, transform 0.2s" }}
+              <div key={article.title} onClick={(e) => { e.stopPropagation(); window.location.href = `/blog/${article.slug}`; }} style={{ background: `rgba(127,119,221,0.05)`, border: `0.5px solid rgba(127,119,221,0.15)`, borderRadius: 16, overflow: "hidden", cursor: "pointer", transition: "border-color 0.2s, transform 0.2s" }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = `rgba(127,119,221,0.4)`; e.currentTarget.style.transform = "translateY(-4px)"; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = `rgba(127,119,221,0.15)`; e.currentTarget.style.transform = "translateY(0)"; }}>
                 {/* Color bar */}
