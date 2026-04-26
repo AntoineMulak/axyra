@@ -1383,18 +1383,34 @@ function BlogOverlay({ articles, initialIdx, onClose }: { articles: Article[]; i
   const article = (selectedIdx !== null && selectedIdx >= 0 && selectedIdx < articles.length) ? articles[selectedIdx] : null;
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 300, background: "#F5F4FF", overflowY: "auto", opacity: visible ? 1 : 0, transition: "opacity 0.3s ease", fontFamily: "'Inter','Segoe UI',sans-serif" }}>
-      <header style={{ background: NIGHT, padding: isMobile ? "16px 5%" : "18px 6%", position: "sticky", top: 0, zIndex: 10, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 28, height: 28, borderRadius: 7, background: VIOLET, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ fontSize: 14, color: "#fff" }}>✦</span>
-          </div>
-          <span style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>Axyra</span>
-          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>&nbsp;/ Blog</span>
-        </div>
-        <button onClick={onClose} style={{ background: "rgba(255,255,255,0.07)", border: "0.5px solid rgba(255,255,255,0.12)", borderRadius: 8, padding: "7px 16px", color: "rgba(255,255,255,0.7)", fontSize: 13, cursor: "pointer" }}>
-          ← Retour au site
+      <nav style={{ position: "sticky", top: 0, zIndex: 10, background: `${NIGHT}EE`, backdropFilter: "blur(12px)", borderBottom: `0.5px solid rgba(127,119,221,0.15)`, padding: "0 6%" }}>
+    <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
+    <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: "-0.5px", cursor: "pointer" }} onClick={onClose}>
+      Ax<span style={{ color: VIOLET }}>yr</span>a
+    </div>
+    {windowWidth >= 900 ? (
+      <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
+        {[["Expertise"], ["Offres"], ["Pourquoi Axyra"], ["Équipe"], ["Contact"]].map(([label]) => (
+          <button key={label} onClick={onClose} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: 14, cursor: "pointer", padding: 0 }}
+            onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
+            onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}>
+            {label}
+          </button>
+        ))}
+        <button style={{ background: "none", border: "none", color: "#fff", fontSize: 14, cursor: "pointer", padding: 0, fontWeight: 600 }}>
+          Blog
         </button>
-      </header>
+        <button onClick={onClose} style={{ background: VIOLET, color: "#fff", border: "none", borderRadius: 8, padding: "8px 20px", fontSize: 14, fontWeight: 500, cursor: "pointer" }}>
+          Prendre contact
+        </button>
+      </div>
+    ) : (
+      <button onClick={onClose} style={{ background: "rgba(255,255,255,0.07)", border: "0.5px solid rgba(255,255,255,0.12)", borderRadius: 8, padding: "7px 16px", color: "rgba(255,255,255,0.7)", fontSize: 13, cursor: "pointer" }}>
+        ← Retour au site
+      </button>
+    )}
+  </div>
+  </nav>
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: isMobile ? "40px 5% 80px" : "60px 6% 100px" }}>
         {article ? (
           <div style={{ maxWidth: 720, margin: "0 auto" }}>
