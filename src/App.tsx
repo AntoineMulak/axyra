@@ -108,6 +108,7 @@ function useWindowWidth() {
 }
 
 type Article = {
+  slug: string;
   tag: string;
   tagColor: string;
   title: string;
@@ -117,8 +118,10 @@ type Article = {
   content: { type: "p" | "h2" | "h3" | "ul"; text?: string; items?: string[] }[];
 };
 
+
 const ARTICLES: Article[] = [
   {
+    slug: "automatisation-ia-pme",
     tag: "Stratégie",
     tagColor: "#4F46E5",
     title: "Automatisation IA : par où commencer quand on est une PME ?",
@@ -151,6 +154,7 @@ const ARTICLES: Article[] = [
     ],
   },
   {
+    slug: "agent-ia-vs-chatbot",
     tag: "Pédagogie",
     tagColor: "#7F77DD",
     title: "Agent IA vs chatbot : quelle différence, et lequel choisir ?",
@@ -198,6 +202,7 @@ const ARTICLES: Article[] = [
     ],
   },
   {
+    slug: "5-processus-eti-francaises",
     tag: "Cas d'usage",
     tagColor: "#059669",
     title: "5 processus que les ETI françaises automatisent en premier",
