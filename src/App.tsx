@@ -1455,7 +1455,7 @@ function BlogOverlay({ articles, initialIdx, onClose }: { articles: Article[]; i
             <p style={{ fontSize: 16, color: "#888", maxWidth: 520, lineHeight: 1.65, marginBottom: 48 }}>Cas concrets, méthodes et retours terrain — sans jargon.</p>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(320px, 1fr))", gap: 24 }}>
               {articles.map((a, i) => (
-                <div key={a.title} onClick={() => setSelectedIdx(i)}
+            <div key={a.title} onClick={() => window.location.href = `/blog/${a.slug}`}
                   style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.07)", borderRadius: 20, overflow: "hidden", cursor: "pointer", transition: "box-shadow 0.25s, transform 0.25s" }}
                   onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 16px 48px rgba(0,0,0,0.1)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
                   onMouseLeave={e => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}>
