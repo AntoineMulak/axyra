@@ -1559,7 +1559,7 @@ export default function AxyraWebsite() {
                 {label}
               </button>
             ))}
-            <button onClick={() => { setBlogOpen({open: true, idx: null}); setMenuOpen(false); }} style={{ display: "block", width: "100%", textAlign: "left" as const, background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: 15, cursor: "pointer", padding: "10px 6%" }}>
+            <button onClick={() => window.location.href = "/blog"} style={{ display: "block", width: "100%", textAlign: "left" as const, background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: 15, cursor: "pointer", padding: "10px 6%" }}>
               Blog
             </button>
           </div>
