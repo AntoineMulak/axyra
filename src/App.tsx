@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useParams } from "react-router-dom";
 
 
 function TeamMemberCard({ member }: { member: { initials: string; name: string; role: string; bg: string; tags: string[]; bio: string; fileId?: string; linkedin?: string } }) {
@@ -1482,10 +1482,17 @@ function BlogPage() {
   return <BlogOverlay articles={ARTICLES} initialIdx={null} onClose={() => window.location.href = "/"} />;
 }
 
+function ArticlePage() {
+  const { slug } = useParams();
+  const idx = ARTICLES.findIndex(a => a.slug === slug);
+  if (idx === -1) { window.location.href = "/blog"; return null; }
+  return <BlogOverlay articles={ARTICLES} initialIdx={idx} onClose={() => window.location.href = "/blog"} />;
+}
 export default function AxyraWebsite() {
   return (
     <Routes>
       <Route path="/blog" element={<BlogPage />} />
+      <Route path="/blog/:slug" element={<ArticlePage />} />
       <Route path="/*" element={<AxyraMain />} />
     </Routes>
   );
