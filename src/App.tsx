@@ -1473,7 +1473,20 @@ function BlogOverlay({ articles, initialIdx, onClose }: { articles: Article[]; i
   );
 }
 
+function BlogPage() {
+  return <BlogOverlay articles={ARTICLES} initialIdx={null} onClose={() => window.location.href = "/"} />;
+}
+
 export default function AxyraWebsite() {
+  return (
+    <Routes>
+      <Route path="/blog" element={<BlogPage />} />
+      <Route path="/*" element={<AxyraMain />} />
+    </Routes>
+  );
+  }
+
+  function AxyraMain() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
