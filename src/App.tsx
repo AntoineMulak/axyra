@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { Routes, Route } from "react-router-dom";
+
 
 function TeamMemberCard({ member }: { member: { initials: string; name: string; role: string; bg: string; tags: string[]; bio: string; fileId?: string; linkedin?: string } }) {
   return (
