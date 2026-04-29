@@ -230,6 +230,16 @@ const ARTICLES: Article[] = [
       { type: "p", text: "Ils sont répétitifs — le même type de tâche se reproduit des dizaines de fois par semaine — et ils ne nécessitent pas de jugement complexe sur chaque cas individuel. Ce sont exactement les conditions dans lesquelles l'IA excelle et génère un ROI rapide et mesurable. Si vous vous reconnaissez dans un ou plusieurs de ces processus, notre audit IA de 2 à 4 semaines vous permettra de confirmer la faisabilité et d'estimer les gains précisément, avant d'investir quoi que ce soit." },
     ],
   },
+  {
+    slug: "comment-implementer-ia-pme",
+    tag: "Guide",
+    tagColor: "#4F46E5",
+    title: "Comment implémenter l'IA dans votre PME : le guide complet (2025)",
+    excerpt: "De la cartographie des processus au premier déploiement — la méthode complète pour intégrer l'IA dans votre PME avec un ROI mesurable.",
+    readTime: "18 min",
+    date: "29 avr. 2025",
+    content: [],
+  },
 ];
 
 function ArticleModal({ article, onClose }: { article: Article; onClose: () => void }) {
@@ -1392,34 +1402,7 @@ function BlogOverlay({ articles, initialIdx, onClose }: { articles: Article[]; i
   const article = (selectedIdx !== null && selectedIdx >= 0 && selectedIdx < articles.length) ? articles[selectedIdx] : null;
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 300, background: "#F5F4FF", overflowY: "auto", opacity: visible ? 1 : 0, transition: "opacity 0.3s ease", fontFamily: "'Inter','Segoe UI',sans-serif" }}>
-      <nav style={{ position: "sticky", top: 0, zIndex: 10, background: `${NIGHT}EE`, backdropFilter: "blur(12px)", borderBottom: `0.5px solid rgba(127,119,221,0.15)`, padding: "0 6%" }}>
-    <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
-    <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: "-0.5px", cursor: "pointer" }} onClick={onClose}>
-      Ax<span style={{ color: VIOLET }}>yr</span>a
-    </div>
-    {windowWidth >= 900 ? (
-      <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
-        {[["Expertise"], ["Offres"], ["Pourquoi Axyra"], ["Équipe"], ["Contact"]].map(([label]) => (
-          <button key={label} onClick={onClose} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: 14, cursor: "pointer", padding: 0 }}
-            onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-            onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}>
-            {label}
-          </button>
-        ))}
-        <button style={{ background: "none", border: "none", color: "#fff", fontSize: 14, cursor: "pointer", padding: 0, fontWeight: 600 }}>
-          Blog
-        </button>
-        <button onClick={onClose} style={{ background: VIOLET, color: "#fff", border: "none", borderRadius: 8, padding: "8px 20px", fontSize: 14, fontWeight: 500, cursor: "pointer" }}>
-          Prendre contact
-        </button>
-      </div>
-    ) : (
-      <button onClick={onClose} style={{ background: "rgba(255,255,255,0.07)", border: "0.5px solid rgba(255,255,255,0.12)", borderRadius: 8, padding: "7px 16px", color: "rgba(255,255,255,0.7)", fontSize: 13, cursor: "pointer" }}>
-        ← Retour au site
-      </button>
-    )}
-  </div>
-  </nav>
+      <SiteNav activePage="blog" />
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: isMobile ? "40px 5% 80px" : "60px 6% 100px" }}>
         {article ? (
           <div style={{ maxWidth: 720, margin: "0 auto" }}>
@@ -1480,6 +1463,82 @@ function BlogOverlay({ articles, initialIdx, onClose }: { articles: Article[]; i
   );
 }
 
+const NAV_ITEMS: [string, string][] = [
+  ["expertise", "Expertise"],
+  ["offres", "Offres"],
+  ["pourquoi", "Pourquoi Axyra"],
+  ["equipe", "Équipe"],
+  ["contact", "Contact"],
+];
+
+function SiteNav({ onScrollTo, activePage, position = "sticky" }: {
+  onScrollTo?: (id: string) => void;
+  activePage?: "blog";
+  position?: "fixed" | "sticky";
+}) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const w = useWindowWidth();
+
+  const handleNav = (id: string) => {
+    setMenuOpen(false);
+    if (onScrollTo) {
+      onScrollTo(id);
+    } else {
+      window.location.href = id === "hero" ? "/" : `/#${id}`;
+    }
+  };
+
+  return (
+    <nav style={{ position, top: 0, left: 0, right: 0, zIndex: position === "fixed" ? 100 : 10, background: `${NIGHT}EE`, backdropFilter: "blur(12px)", borderBottom: `0.5px solid rgba(127,119,221,0.15)`, padding: "0 6%" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
+        <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: "-0.5px", cursor: "pointer" }} onClick={() => handleNav("hero")}>
+          Ax<span style={{ color: VIOLET }}>yr</span>a
+        </div>
+        {w >= 900 ? (
+          <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
+            {NAV_ITEMS.map(([id, label]) => (
+              <button key={id} onClick={() => handleNav(id)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: 14, cursor: "pointer", padding: 0, transition: "color 0.2s" }}
+                onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
+                onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}>
+                {label}
+              </button>
+            ))}
+            <button onClick={() => { setMenuOpen(false); window.location.href = "/blog"; }} style={{ background: "none", border: "none", color: activePage === "blog" ? "#fff" : "rgba(255,255,255,0.7)", fontWeight: activePage === "blog" ? 600 : 400, fontSize: 14, cursor: "pointer", padding: 0, transition: "color 0.2s" }}
+              onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
+              onMouseLeave={e => (e.currentTarget.style.color = activePage === "blog" ? "#fff" : "rgba(255,255,255,0.7)")}>
+              Blog
+            </button>
+            <button onClick={() => handleNav("contact")} style={{ background: VIOLET, color: "#fff", border: "none", borderRadius: 8, padding: "8px 20px", fontSize: 14, fontWeight: 500, cursor: "pointer" }}>
+              Prendre contact
+            </button>
+          </div>
+        ) : (
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <button onClick={() => handleNav("contact")} style={{ background: VIOLET, color: "#fff", border: "none", borderRadius: 8, padding: "7px 16px", fontSize: 13, fontWeight: 500, cursor: "pointer" }}>
+              Contact
+            </button>
+            <button onClick={() => setMenuOpen(!menuOpen)} style={{ background: "none", border: "0.5px solid rgba(255,255,255,0.2)", borderRadius: 8, padding: "8px 10px", cursor: "pointer", color: "#fff", fontSize: 18, lineHeight: 1 }}>
+              {menuOpen ? "✕" : "☰"}
+            </button>
+          </div>
+        )}
+      </div>
+      {menuOpen && w < 900 && (
+        <div style={{ borderTop: `0.5px solid rgba(127,119,221,0.15)`, padding: "16px 0 20px" }}>
+          {NAV_ITEMS.map(([id, label]) => (
+            <button key={id} onClick={() => handleNav(id)} style={{ display: "block", width: "100%", textAlign: "left" as const, background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: 15, cursor: "pointer", padding: "10px 6%", transition: "color 0.2s" }}>
+              {label}
+            </button>
+          ))}
+          <button onClick={() => { setMenuOpen(false); window.location.href = "/blog"; }} style={{ display: "block", width: "100%", textAlign: "left" as const, background: "none", border: "none", color: activePage === "blog" ? "#fff" : "rgba(255,255,255,0.7)", fontWeight: activePage === "blog" ? 600 : 400, fontSize: 15, cursor: "pointer", padding: "10px 6%" }}>
+            Blog
+          </button>
+        </div>
+      )}
+    </nav>
+  );
+}
+
 function MarkdownArticlePage() {
   const { slug } = useParams();
   const [content, setContent] = useState<string>("");
@@ -1520,17 +1579,7 @@ function MarkdownArticlePage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#F5F4FF", fontFamily: "'Inter','Segoe UI',sans-serif" }}>
-      <nav style={{ position: "sticky", top: 0, zIndex: 10, background: `${NIGHT}EE`, backdropFilter: "blur(12px)", borderBottom: `0.5px solid rgba(127,119,221,0.15)`, padding: "0 6%" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
-          <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: "-0.5px", cursor: "pointer" }} onClick={() => window.location.href = "/"}>
-            Ax<span style={{ color: VIOLET }}>yr</span>a
-          </div>
-          <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-            <button onClick={() => window.location.href = "/blog"} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: 14, cursor: "pointer" }}>← Blog</button>
-            <button onClick={() => window.location.href = "/#contact"} style={{ background: VIOLET, color: "#fff", border: "none", borderRadius: 8, padding: "8px 20px", fontSize: 14, fontWeight: 500, cursor: "pointer" }}>Prendre contact</button>
-          </div>
-        </div>
-      </nav>
+      <SiteNav activePage="blog" />
 
       <div style={{ maxWidth: 800, margin: "0 auto", padding: isMobile ? "40px 20px 80px" : "60px 40px 100px" }}>
         {meta && (
@@ -1589,9 +1638,8 @@ function BlogPage() {
 
 function ArticlePage() {
   const { slug } = useParams();
-  const inCode = ARTICLES.findIndex(a => a.slug === slug) !== -1;
-  if (inCode) {
-    const idx = ARTICLES.findIndex(a => a.slug === slug);
+  const idx = ARTICLES.findIndex(a => a.slug === slug);
+  if (idx !== -1 && ARTICLES[idx].content.length > 0) {
     return <BlogOverlay articles={ARTICLES} initialIdx={idx} onClose={() => window.location.href = "/blog"} />;
   }
   return <MarkdownArticlePage />;
@@ -1608,7 +1656,6 @@ export default function AxyraWebsite() {
 
 function AxyraMain() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [blogOpen, setBlogOpen] = useState<{open: boolean; idx: number | null}>({open: false, idx: null});
   const windowWidth = useWindowWidth();
@@ -1617,7 +1664,6 @@ function AxyraMain() {
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: "smooth" });
-    setMenuOpen(false);
   };
 
   return (
@@ -1634,57 +1680,7 @@ function AxyraMain() {
       `}</style>
 
       {/* NAV */}
-      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, background: `${NIGHT}EE`, backdropFilter: "blur(12px)", borderBottom: `0.5px solid rgba(127,119,221,0.15)`, padding: "0 6%" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
-          <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: "-0.5px", cursor: "pointer" }} onClick={() => scrollTo("hero")}>
-            Ax<span style={{ color: VIOLET }}>yr</span>a
-          </div>
-          {/* Desktop nav */}
-          {windowWidth >= 900 && (
-            <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
-              {[["expertise", "Expertise"], ["offres", "Offres"], ["pourquoi", "Pourquoi Axyra"], ["equipe", "Équipe"], ["contact", "Contact"]].map(([id, label]) => (
-                <button key={id} onClick={() => scrollTo(id)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: 14, cursor: "pointer", padding: 0, transition: "color 0.2s" }}
-                  onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-                  onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}>
-                  {label}
-                </button>
-              ))}
-              <button onClick={() => window.location.href = "/blog"} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: 14, cursor: "pointer", padding: 0, transition: "color 0.2s" }}
-                onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-                onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}>
-                Blog
-              </button>
-              <button onClick={() => scrollTo("contact")} style={{ background: VIOLET, color: "#fff", border: "none", borderRadius: 8, padding: "8px 20px", fontSize: 14, fontWeight: 500, cursor: "pointer" }}>
-                Prendre contact
-              </button>
-            </div>
-          )}
-          {/* Mobile hamburger */}
-          {windowWidth < 900 && (
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <button onClick={() => scrollTo("contact")} style={{ background: VIOLET, color: "#fff", border: "none", borderRadius: 8, padding: "7px 16px", fontSize: 13, fontWeight: 500, cursor: "pointer" }}>
-                Contact
-              </button>
-              <button onClick={() => setMenuOpen(!menuOpen)} style={{ background: "none", border: "0.5px solid rgba(255,255,255,0.2)", borderRadius: 8, padding: "8px 10px", cursor: "pointer", color: "#fff", fontSize: 18, lineHeight: 1 }}>
-                {menuOpen ? "✕" : "☰"}
-              </button>
-            </div>
-          )}
-        </div>
-        {/* Mobile menu dropdown */}
-        {menuOpen && windowWidth < 900 && (
-          <div style={{ borderTop: `0.5px solid rgba(127,119,221,0.15)`, padding: "16px 0 20px" }}>
-            {[["expertise", "Expertise"], ["offres", "Offres"], ["pourquoi", "Pourquoi Axyra"], ["equipe", "Équipe"], ["contact", "Contact"]].map(([id, label]) => (
-              <button key={id} onClick={() => scrollTo(id)} style={{ display: "block", width: "100%", textAlign: "left" as const, background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: 15, cursor: "pointer", padding: "10px 6%", transition: "color 0.2s" }}>
-                {label}
-              </button>
-            ))}
-            <button onClick={() => window.location.href = "/blog"} style={{ display: "block", width: "100%", textAlign: "left" as const, background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: 15, cursor: "pointer", padding: "10px 6%" }}>
-              Blog
-            </button>
-          </div>
-        )}
-      </nav>
+      <SiteNav onScrollTo={scrollTo} position="fixed" />
 
       {/* HERO */}
       <section id="hero" style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: isMobile ? "100px 5% 60px" : "120px 6% 80px", position: "relative", overflow: "hidden" }}>
