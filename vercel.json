@@ -3,10 +3,6 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/blog/:slug.md",
-      "destination": "/blog/:slug.md"
-    },
-    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
