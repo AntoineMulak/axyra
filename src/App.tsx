@@ -1488,7 +1488,7 @@ function MarkdownArticlePage() {
   const isMobile = w < 768;
 
   useEffect(() => {
-    fetch(`https://raw.githubusercontent.com/AntoineMulak/axyra/main/public/blog/${slug}.md`)
+    fetch(`/blog/${slug}.md`)
       .then(r => { if (!r.ok) throw new Error("Not found"); return r.text(); })
       .then(text => {
         // Parse frontmatter
