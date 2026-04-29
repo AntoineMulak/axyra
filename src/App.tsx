@@ -1,4 +1,5 @@
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useState, useEffect, useRef } from "react";
 import { Routes, Route, useParams } from "react-router-dom";
 
@@ -1546,6 +1547,7 @@ function MarkdownArticlePage() {
 
         <div style={{ fontSize: 16, color: "#333", lineHeight: 1.85 }}>
           <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
             components={{
               h1: ({children}) => <h1 style={{ fontSize: isMobile ? 24 : 32, fontWeight: 700, color: NIGHT, marginTop: 48, marginBottom: 16, letterSpacing: "-0.5px" }}>{children}</h1>,
               h2: ({children}) => <h2 style={{ fontSize: isMobile ? 20 : 24, fontWeight: 700, color: NIGHT, marginTop: 40, marginBottom: 14, letterSpacing: "-0.3px" }}>{children}</h2>,
