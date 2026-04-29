@@ -1,3 +1,4 @@
+import ReactMarkdown from "react-markdown";
 import { useState, useEffect, useRef } from "react";
 import { Routes, Route, useParams } from "react-router-dom";
 
@@ -1478,15 +1479,120 @@ function BlogOverlay({ articles, initialIdx, onClose }: { articles: Article[]; i
   );
 }
 
+function MarkdownArticlePage() {
+  const { slug } = useParams();
+  const [content, setContent] = useState<string>("");
+  const [meta, setMeta] = useState<{title: string; tag: string; tagColor: string; date: string; readTime: string; excerpt: string} | null>(null);
+  const [loading, setLoading] = useState(true);
+  const w = useWindowWidth();
+  const isMobile = w < 768;
+
+  useEffect(() => {
+    fetch(`/blog/${slug}.md`)
+      .then(r => { if (!r.ok) throw new Error("Not found"); return r.text(); })
+      .then(text => {
+        // Parse frontmatter
+        const match = text.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+        if (match) {
+          const fm: Record<string, string> = {};
+          match[1].split("\n").forEach(line => {
+            const [k, ...v] = line.split(": ");
+            if (k) fm[k.trim()] = v.join(": ").replace(/^"|"$/g, "").trim();
+          });
+          setMeta({ title: fm.title, tag: fm.tag, tagColor: fm.tagColor, date: fm.date, readTime: fm.readTime, excerpt: fm.excerpt });
+          setContent(match[2]);
+        } else {
+          setContent(text);
+        }
+        setLoading(false);
+      })
+      .catch(() => { window.location.href = "/blog"; });
+  }, [slug]);
+
+  if (loading) return (
+    <div style={{ minHeight: "100vh", background: "#F5F4FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ display: "flex", gap: 6 }}>
+        {[0, 0.15, 0.3].map(d => <div key={d} style={{ width: 8, height: 8, borderRadius: "50%", background: VIOLET, animation: `blink 0.9s ease ${d}s infinite` }} />)}
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#F5F4FF", fontFamily: "'Inter','Segoe UI',sans-serif" }}>
+      <nav style={{ position: "sticky", top: 0, zIndex: 10, background: `${NIGHT}EE`, backdropFilter: "blur(12px)", borderBottom: `0.5px solid rgba(127,119,221,0.15)`, padding: "0 6%" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
+          <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: "-0.5px", cursor: "pointer" }} onClick={() => window.location.href = "/"}>
+            Ax<span style={{ color: VIOLET }}>yr</span>a
+          </div>
+          <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+            <button onClick={() => window.location.href = "/blog"} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: 14, cursor: "pointer" }}>← Blog</button>
+            <button onClick={() => window.location.href = "/#contact"} style={{ background: VIOLET, color: "#fff", border: "none", borderRadius: 8, padding: "8px 20px", fontSize: 14, fontWeight: 500, cursor: "pointer" }}>Prendre contact</button>
+          </div>
+        </div>
+      </nav>
+
+      <div style={{ maxWidth: 720, margin: "0 auto", padding: isMobile ? "40px 5% 80px" : "60px 6% 100px" }}>
+        {meta && (
+          <div style={{ marginBottom: 32 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+              <span style={{ fontSize: 11, fontWeight: 600, color: meta.tagColor, background: `${meta.tagColor}18`, padding: "4px 10px", borderRadius: 20 }}>{meta.tag}</span>
+              <span style={{ fontSize: 12, color: "#bbb" }}>{meta.date} · {meta.readTime} de lecture</span>
+            </div>
+            <h1 style={{ fontSize: isMobile ? 24 : 36, fontWeight: 700, color: NIGHT, lineHeight: 1.25, letterSpacing: "-0.5px", marginBottom: 20 }}>{meta.title}</h1>
+            <p style={{ fontSize: 16, color: "#666", lineHeight: 1.75, borderLeft: `3px solid ${VIOLET}`, paddingLeft: 20, fontStyle: "italic" }}>{meta.excerpt}</p>
+            <div style={{ height: 1, background: "rgba(0,0,0,0.08)", margin: "32px 0" }} />
+          </div>
+        )}
+
+        <div style={{ fontSize: 16, color: "#333", lineHeight: 1.85 }}>
+          <ReactMarkdown
+            components={{
+              h1: ({children}) => <h1 style={{ fontSize: isMobile ? 24 : 32, fontWeight: 700, color: NIGHT, marginTop: 48, marginBottom: 16, letterSpacing: "-0.5px" }}>{children}</h1>,
+              h2: ({children}) => <h2 style={{ fontSize: isMobile ? 20 : 24, fontWeight: 700, color: NIGHT, marginTop: 40, marginBottom: 14, letterSpacing: "-0.3px" }}>{children}</h2>,
+              h3: ({children}) => <h3 style={{ fontSize: 18, fontWeight: 600, color: NIGHT, marginTop: 28, marginBottom: 10 }}>{children}</h3>,
+              p: ({children}) => <p style={{ marginBottom: 20, lineHeight: 1.85, color: "#444" }}>{children}</p>,
+              ul: ({children}) => <ul style={{ marginBottom: 20, paddingLeft: 24 }}>{children}</ul>,
+              li: ({children}) => <li style={{ marginBottom: 8, color: "#444" }}>{children}</li>,
+              strong: ({children}) => <strong style={{ fontWeight: 700, color: NIGHT }}>{children}</strong>,
+              blockquote: ({children}) => <blockquote style={{ borderLeft: `3px solid ${VIOLET}`, paddingLeft: 20, margin: "24px 0", fontStyle: "italic", color: "#666" }}>{children}</blockquote>,
+              table: ({children}) => <div style={{ overflowX: "auto", marginBottom: 24 }}><table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>{children}</table></div>,
+              th: ({children}) => <th style={{ background: NIGHT, color: "#fff", padding: "10px 14px", textAlign: "left", fontWeight: 600, fontSize: 13 }}>{children}</th>,
+              td: ({children}) => <td style={{ padding: "10px 14px", borderBottom: "1px solid rgba(0,0,0,0.07)", color: "#444" }}>{children}</td>,
+              tr: ({children}) => <tr style={{ background: "transparent" }} onMouseEnter={e => (e.currentTarget.style.background = "rgba(127,119,221,0.05)")} onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>{children}</tr>,
+              a: ({href, children}) => <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: VIOLET, textDecoration: "underline" }}>{children}</a>,
+              hr: () => <hr style={{ border: "none", borderTop: "1px solid rgba(0,0,0,0.08)", margin: "40px 0" }} />,
+            }}
+          >
+            {content}
+          </ReactMarkdown>
+        </div>
+
+        <div style={{ marginTop: 56, background: NIGHT, borderRadius: 20, padding: isMobile ? "28px 24px" : "36px 40px", display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "center", justifyContent: "space-between", gap: 20 }}>
+          <div>
+            <p style={{ fontSize: 17, fontWeight: 700, color: "#fff", margin: "0 0 6px" }}>Ça vous parle ?</p>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", margin: 0 }}>30 minutes pour identifier vos cas d'usage — gratuit, sans engagement.</p>
+          </div>
+          <button onClick={() => window.location.href = "/#contact"} style={{ background: VIOLET, color: "#fff", border: "none", borderRadius: 8, padding: "11px 22px", fontSize: 14, fontWeight: 600, cursor: "pointer", flexShrink: 0, whiteSpace: "nowrap" as const }}>
+            Prendre contact →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function BlogPage() {
   return <BlogOverlay articles={ARTICLES} initialIdx={null} onClose={() => window.location.href = "/"} />;
 }
 
 function ArticlePage() {
   const { slug } = useParams();
-  const idx = ARTICLES.findIndex(a => a.slug === slug);
-  if (idx === -1) { window.location.href = "/blog"; return null; }
-  return <BlogOverlay articles={ARTICLES} initialIdx={idx} onClose={() => window.location.href = "/blog"} />;
+  const inCode = ARTICLES.findIndex(a => a.slug === slug) !== -1;
+  if (inCode) {
+    const idx = ARTICLES.findIndex(a => a.slug === slug);
+    return <BlogOverlay articles={ARTICLES} initialIdx={idx} onClose={() => window.location.href = "/blog"} />;
+  }
+  return <MarkdownArticlePage />;
 }
 export default function AxyraWebsite() {
   return (
