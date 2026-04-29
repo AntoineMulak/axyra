@@ -1491,7 +1491,7 @@ function SiteNav({ onScrollTo, activePage, position = "sticky" }: {
   return (
     <nav style={{ position, top: 0, left: 0, right: 0, zIndex: position === "fixed" ? 100 : 10, background: `${NIGHT}EE`, backdropFilter: "blur(12px)", borderBottom: `0.5px solid rgba(127,119,221,0.15)`, padding: "0 6%" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
-        <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: "-0.5px", cursor: "pointer" }} onClick={() => handleNav("hero")}>
+        <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: "-0.5px", cursor: "pointer", color: "#fff" }} onClick={() => handleNav("hero")}>
           Ax<span style={{ color: VIOLET }}>yr</span>a
         </div>
         {w >= 900 ? (
