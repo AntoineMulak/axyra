@@ -1531,7 +1531,7 @@ function MarkdownArticlePage() {
         </div>
       </nav>
 
-      <div style={{ maxWidth: 720, margin: "0 auto", padding: isMobile ? "40px 5% 80px" : "60px 6% 100px" }}>
+      <div style={{ maxWidth: 800, margin: "0 auto", padding: isMobile ? "40px 20px 80px" : "60px 40px 100px" }}>
         {meta && (
           <div style={{ marginBottom: 32 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
