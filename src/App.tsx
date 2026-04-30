@@ -1,5 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Helmet } from "react-helmet-async";
 import { useState, useEffect, useRef } from "react";
 import { Routes, Route, useParams } from "react-router-dom";
 
@@ -1577,8 +1578,30 @@ function MarkdownArticlePage() {
     </div>
   );
 
+  const canonicalUrl = `https://www.axyra-ai.fr/blog/${slug}`;
+  const jsonLd = meta ? {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": meta.title,
+    "description": meta.excerpt,
+    "datePublished": meta.date,
+    "author": { "@type": "Organization", "name": "Axyra" },
+    "publisher": { "@type": "Organization", "name": "Axyra", "url": "https://www.axyra-ai.fr" },
+    "mainEntityOfPage": canonicalUrl,
+  } : null;
+
   return (
     <div style={{ minHeight: "100vh", background: "#F5F4FF", fontFamily: "'Inter','Segoe UI',sans-serif" }}>
+      <Helmet>
+        <title>{meta ? `${meta.title} | Axyra` : "Article | Axyra"}</title>
+        <meta name="description" content={meta?.excerpt ?? ""} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={meta ? `${meta.title} | Axyra` : "Article | Axyra"} />
+        <meta property="og:description" content={meta?.excerpt ?? ""} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:type" content="article" />
+        {jsonLd && <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>}
+      </Helmet>
       <SiteNav activePage="blog" />
 
       <div style={{ maxWidth: 800, margin: "0 auto", padding: isMobile ? "40px 20px 80px" : "60px 40px 100px" }}>
@@ -1633,14 +1656,52 @@ function MarkdownArticlePage() {
 }
 
 function BlogPage() {
-  return <BlogOverlay articles={ARTICLES} initialIdx={null} onClose={() => window.location.href = "/"} />;
+  return (
+    <>
+      <Helmet>
+        <title>Blog IA pour PME &amp; ETI | Axyra</title>
+        <meta name="description" content="Cas concrets, méthodes et retours terrain sur l'IA en entreprise — automatisation, agents IA, ROI. Sans jargon." />
+        <link rel="canonical" href="https://www.axyra-ai.fr/blog" />
+        <meta property="og:title" content="Blog IA pour PME &amp; ETI | Axyra" />
+        <meta property="og:description" content="Cas concrets, méthodes et retours terrain sur l'IA en entreprise — automatisation, agents IA, ROI. Sans jargon." />
+        <meta property="og:url" content="https://www.axyra-ai.fr/blog" />
+      </Helmet>
+      <BlogOverlay articles={ARTICLES} initialIdx={null} onClose={() => window.location.href = "/"} />
+    </>
+  );
 }
 
 function ArticlePage() {
   const { slug } = useParams();
   const idx = ARTICLES.findIndex(a => a.slug === slug);
-  if (idx !== -1 && ARTICLES[idx].content.length > 0) {
-    return <BlogOverlay articles={ARTICLES} initialIdx={idx} onClose={() => window.location.href = "/blog"} />;
+  const article = idx !== -1 ? ARTICLES[idx] : null;
+
+  if (article && article.content.length > 0) {
+    const canonicalUrl = `https://www.axyra-ai.fr/blog/${article.slug}`;
+    return (
+      <>
+        <Helmet>
+          <title>{article.title} | Axyra</title>
+          <meta name="description" content={article.excerpt} />
+          <link rel="canonical" href={canonicalUrl} />
+          <meta property="og:title" content={`${article.title} | Axyra`} />
+          <meta property="og:description" content={article.excerpt} />
+          <meta property="og:url" content={canonicalUrl} />
+          <meta property="og:type" content="article" />
+          <script type="application/ld+json">{JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": article.title,
+            "description": article.excerpt,
+            "datePublished": article.date,
+            "author": { "@type": "Organization", "name": "Axyra" },
+            "publisher": { "@type": "Organization", "name": "Axyra", "url": "https://www.axyra-ai.fr" },
+            "mainEntityOfPage": canonicalUrl,
+          })}</script>
+        </Helmet>
+        <BlogOverlay articles={ARTICLES} initialIdx={idx} onClose={() => window.location.href = "/blog"} />
+      </>
+    );
   }
   return <MarkdownArticlePage />;
 }
@@ -1668,6 +1729,22 @@ function AxyraMain() {
 
   return (
     <div style={{ fontFamily: "'Inter', 'Segoe UI', sans-serif", background: NIGHT, color: "#fff", minHeight: "100vh", overflowX: "hidden" }}>
+      <Helmet>
+        <title>Axyra — Intelligence Artificielle pour PME &amp; ETI françaises</title>
+        <meta name="description" content="Axyra accompagne les PME et ETI françaises dans l'intégration de l'IA — automatisation, agents IA, data. De l'audit à la mise en production, ROI en moins de 3 mois." />
+        <link rel="canonical" href="https://www.axyra-ai.fr/" />
+        <meta property="og:title" content="Axyra — Intelligence Artificielle pour PME &amp; ETI françaises" />
+        <meta property="og:description" content="Automatisation, agents IA et data pour les PME et ETI françaises. ROI mesurable en moins de 3 mois." />
+        <meta property="og:url" content="https://www.axyra-ai.fr/" />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "Axyra",
+          "url": "https://www.axyra-ai.fr",
+          "description": "Accompagnement IA pour PME et ETI françaises — automatisation, agents IA, data.",
+          "areaServed": "FR",
+        })}</script>
+      </Helmet>
       {selectedArticle && <ArticleModal article={selectedArticle} onClose={() => setSelectedArticle(null)} />}
       {blogOpen.open && <BlogOverlay articles={ARTICLES} initialIdx={blogOpen.idx} onClose={() => setBlogOpen({open: false, idx: null})} />}
 
